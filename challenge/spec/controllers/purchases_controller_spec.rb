@@ -35,10 +35,6 @@ describe PurchasesController do
 
     describe "import" do
       shared_examples_for "invalid_submission" do
-        it "does not import any purchases" do
-          expect(Purchase).to have_received(:import)
-        end
-
         it "sets an alert notice" do
           expect(flash[:alert]).not_to be_blank
         end
@@ -48,38 +44,68 @@ describe PurchasesController do
         end
       end
 
-      context "with a valid submission" do
+      let(:file) { double(tempfile: 'path/to/file.tab', original_filename: 'file.tab') }
+
+      before { Purchase.stub :import }
+
+      context "with a file" do
         before do
-          Purchase.stub import: true
-          params[:import] = { file: double }
-          post :import, params
+          controller.stub import_params: { file: file }
         end
 
-        it "imports purchases successfully" do
-          expect(Purchase).to have_received(:import).and_returned(true)
+        context "with a valid submission" do
+          before do
+            Purchase.stub import: true
+            post :import, params
+          end
+
+          it "attempts to import the purchases" do
+            expect(Purchase).to have_received(:import)
+          end
+
+          it "sets a notice message" do
+            expect(flash[:notice]).not_to be_blank
+          end
+
+          it "redirects to the index page" do
+            expect(response).to redirect_to(action: :index)
+          end
         end
 
-        it "sets a notice message" do
-          expect(flash[:notice]).not_to be_blank
+        context "with errors" do
+          before do
+            Purchase.stub import: false
+            post :import, params
+          end
+
+          it "attempts to import the purchases" do
+            expect(Purchase).to have_received(:import)
+          end
+
+          it_behaves_like "invalid_submission"
         end
 
-        it "redirects to the index page" do
-          expect(response).to redirect_to(action: :index)
+        context "with an incorrect file type" do
+          before do
+            file.stub original_filename: 'file.incorrect'
+            post :import, params
+          end
+
+          it_behaves_like "invalid_submission"
         end
       end
 
-      context "with errors" do
+      context "without a file" do
         before do
-          Purchase.stub import: false
           post :import, params
         end
 
         it_behaves_like "invalid_submission"
       end
 
-      context "with a missing file" do
+      context "with an exception" do
         before do
-          Purchase.stub import: false
+          File.stub(:extname).and_raise
           post :import, params
         end
 
