@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: purchases
+#
+#  id             :integer          not null, primary key
+#  purchaser_id   :integer
+#  item_id        :integer
+#  merchant_id    :integer
+#  purchase_count :integer
+#  created_at     :datetime
+#  updated_at     :datetime
+#
+
 describe Purchase do
   describe "creation" do
     let(:purchaser) { create(:purchaser) }

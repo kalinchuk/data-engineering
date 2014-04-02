@@ -4,7 +4,7 @@ class CreatePurchases < ActiveRecord::Migration
       t.references :purchaser
       t.references :item
       t.references :merchant
-      t.int :purchase_count
+      t.integer :purchase_count, default: 0
 
       t.timestamps
     end
