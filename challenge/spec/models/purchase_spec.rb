@@ -102,8 +102,8 @@ describe Purchase do
 
         it "creates a purchase" do
           subject
-          expect(first_purchase).to be_persisted
-          expect(first_purchase.purchaser).to eq purchaser
+          expect(first_purchase).not_to be_nil
+          expect(first_purchase.purchaser).to eq first_purchaser
           expect(first_purchase.item).to eq first_item
           expect(first_purchase.merchant).to eq first_merchant
           expect(first_purchase.purchase_count).to eq 2
@@ -111,20 +111,20 @@ describe Purchase do
 
         it "creates a purchaser" do
           subject
-          expect(first_purchaser).to be_persisted
+          expect(first_purchaser).not_to be_nil
           expect(first_purchaser.name).to eq 'Snake Plissken'
         end
 
         it "creates an item" do
           subject
-          expect(first_item).to be_persisted
+          expect(first_item).not_to be_nil
           expect(first_item.description).to eq '$10 off $20 of food'
           expect(first_item.price).to eq 10
         end
 
         it "creates a merchant" do
           subject
-          expect(first_merchant).to be_persisted
+          expect(first_merchant).not_to be_nil
           expect(first_merchant.name).to eq "Bob's Pizza"
           expect(first_merchant.address).to eq '987 Fake St'
         end
