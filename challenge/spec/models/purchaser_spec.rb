@@ -1,7 +1,7 @@
 describe Purchaser do
   describe "creation" do
     let(:creation_attributes) {{
-      name: { Faker::Name.name }
+      name: Faker::Name.name
     }}
 
     subject { Purchaser.create(creation_attributes) }

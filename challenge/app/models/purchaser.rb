@@ -9,4 +9,20 @@
 #
 
 class Purchaser < ActiveRecord::Base
+  # @!group Attributes
+
+  # @!attibute name
+  # The name of the purchaser.
+  # @return [String]
+
+  # @!group Associations
+
+  # @!attribute purchases
+  # The purchases made by the purchaser.
+  # @return [Relation<Purchase>]
+  has_many :purchases
+
+  # @!group Validations
+
+  validates :name, presence: true
 end
