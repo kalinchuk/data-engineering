@@ -70,4 +70,109 @@ describe Purchase do
       end
     end
   end
+
+  describe "importing" do
+    describe "import" do
+      let(:file) { double }
+      let(:file_contents) { [
+        ['purchaser name', 'item description', 'item price', 'purchase count', 'merchant address', 'merchant name'],
+        ['Snake Plissken', '$10 off $20 of food', 10.0, 2, '987 Fake St', "Bob's Pizza"]
+      ]}
+      let(:first_purchase) { Purchase.first }
+      let(:first_purchaser) { Purchaser.first }
+      let(:first_item) { Item.first }
+      let(:first_merchant) { Merchant.first }
+
+      subject { Purchase.import(file) }
+
+      before do
+        CSV.stub(:open).and_yield(file_contents)
+      end
+
+      context "with valid purchases" do
+        it "destroys other purchases" do
+          expect(Purchase).to receive(:destroy_all)
+          subject
+        end
+
+        it "opens the CSV file" do
+          expect(CSV).to receive(:open).with(file, 'r')
+          subject
+        end
+
+        it "creates a purchase" do
+          subject
+          expect(first_purchase).to be_persisted
+          expect(first_purchase.purchaser).to eq purchaser
+          expect(first_purchase.item).to eq first_item
+          expect(first_purchase.merchant).to eq first_merchant
+          expect(first_purchase.purchase_count).to eq 2
+        end
+
+        it "creates a purchaser" do
+          subject
+          expect(first_purchaser).to be_persisted
+          expect(first_purchaser.name).to eq 'Snake Plissken'
+        end
+
+        it "creates an item" do
+          subject
+          expect(first_item).to be_persisted
+          expect(first_item.description).to eq '$10 off $20 of food'
+          expect(first_item.price).to eq 10
+        end
+
+        it "creates a merchant" do
+          subject
+          expect(first_merchant).to be_persisted
+          expect(first_merchant.name).to eq "Bob's Pizza"
+          expect(first_merchant.address).to eq '987 Fake St'
+        end
+
+        it "is true" do
+          expect(subject).to be_true
+        end
+      end
+
+      context "with invalid purchases" do
+        before do
+          file_contents << ['Some purchaser', '', 0, 2, 'Street', 'Company']
+        end
+
+        it "opens the CSV file" do
+          expect(CSV).to receive(:open).with(file, 'r')
+          subject
+        end
+
+        it "does not add or delete any purchases" do
+          subject
+          expect(Purchase.count).to eq 0
+        end
+
+        it "is false" do
+          expect(subject).to be_false
+        end
+      end
+
+      context "with an exception" do
+        before do
+          CSV.stub(:open).and_raise
+        end
+
+        it "opens the CSV file" do
+          expect(CSV).to receive(:open).with(file, 'r')
+          subject
+        end
+
+        it "does not add or delete any purchases" do
+          subject
+          expect(Purchase.count).to eq 0
+        end
+
+        it "is false" do
+          expect(subject).to be_false
+        end
+      end
+    end
+  end
 end
