@@ -18,6 +18,6 @@ FactoryGirl.define do
     purchaser
     item
     merchant
-    purchase_count { rand(10) }
+    purchase_count { rand(10) + 1 }
   end
 end
