@@ -4,9 +4,10 @@
 #
 #  id          :integer          not null, primary key
 #  description :string(255)
-#  price       :float
+#  price       :float            default(0.0)
 #  created_at  :datetime
 #  updated_at  :datetime
+#  merchant_id :integer
 #
 
 # Read about factories at https://github.com/thoughtbot/factory_girl

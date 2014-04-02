@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: purchasers
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 describe Purchaser do
   describe "creation" do
     let(:creation_attributes) {{

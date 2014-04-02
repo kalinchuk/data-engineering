@@ -8,6 +8,7 @@
 #  updated_at :datetime
 #
 
+# This class represents a purchaser.
 class Purchaser < ActiveRecord::Base
   # @!group Attributes
 

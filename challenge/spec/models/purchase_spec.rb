@@ -6,7 +6,7 @@
 #  purchaser_id   :integer
 #  item_id        :integer
 #  merchant_id    :integer
-#  purchase_count :integer
+#  purchase_count :integer          default(0)
 #  created_at     :datetime
 #  updated_at     :datetime
 #
