@@ -1,12 +1,14 @@
 describe Purchase do
   describe "creation" do
+    let(:purchaser) { create(:purchaser) }
+    let(:item) { create(:item) }
+    let(:merchant) { create(:merchant) }
+
     let(:creation_attributes) {{
-      purchaser_name: Faker::Name.name,
-      item_description: Faker::Lorem.paragraph,
-      item_price: 55.50,
-      purchase_count: 5,
-      merchant_address: Faker::Address.street_address,
-      merchant_name: Faker::Company.name
+      purchaser_id: purchaser.id,
+      item_id: item.id,
+      merchant_id: merchant.id,
+      purchase_count: 5
     }}
 
     subject { Purchase.create(creation_attributes) }
@@ -16,23 +18,18 @@ describe Purchase do
         expect(subject).to be_valid
       end
 
-      it "rejects a purchase without a purchaser name" do
-        creation_attributes.delete :purchaser_name
+      it "rejects a purchase without a purchaser" do
+        creation_attributes.delete :purchaser_id
         expect(subject).not_to be_valid
       end
 
-      it "accepts a purchase without an item description" do
-        creation_attributes.delete :item_description
-        expect(subject).to be_valid
-      end
-
-      it "rejects a purchase without an item price" do
-        creation_attributes.delete :item_price
+      it "rejects a purchase without an item" do
+        creation_attributes.delete :item_id
         expect(subject).not_to be_valid
       end
 
-      it "rejects a purchase with an item price less than 1" do
-        creation_attributes[:item_price] = 0
+      it "rejects a purchase without a merchant" do
+        creation_attributes.delete :merchant_id
         expect(subject).not_to be_valid
       end
 
@@ -41,23 +38,22 @@ describe Purchase do
         expect(subject).not_to be_valid
       end
 
-      it "rejects a purchase with a purchase count less than 1" do
-        creation_attributes[:purchase_count] = 0
-        expect(subject).not_to be_valid
-      end
-
-      it "rejects a purchase without a merchant address" do
-        creation_attributes.delete :merchant_address
-        expect(subject).not_to be_valid
-      end
-
-      it "rejects a purchase without a merchant name" do
-        creation_attributes.delete :merchant_name
-        expect(subject).not_to be_valid
-      end
-
       it "accepts a purchase from a factory" do
         expect(create(:purchase)).to be_valid
+      end
+    end
+
+    describe "associations" do
+      it "is associated with the purchaser" do
+        expect(subject.purchaser).to eq purchaser
+      end
+
+      it "is associated with the item" do
+        expect(subject.item).to eq item
+      end
+
+      it "is associated with the merchant" do
+        expect(subject.merchant).to eq merchant
       end
     end
   end
