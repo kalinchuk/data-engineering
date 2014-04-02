@@ -9,5 +9,27 @@
 #  updated_at :datetime
 #
 
+# This class represents a merchant that sells items.
 class Merchant < ActiveRecord::Base
+  # @!group Attributes
+
+  # @!attribute name
+  # The name of the merchant.
+  # @return [String]
+
+  # @!attribute address
+  # The address of the merchant.
+  # @return [String]
+
+  # @!group Associations
+
+  # @!attribute items
+  # The items the merchant sells.
+  # @return [Relation<Item>]
+  has_many :items
+
+  # @!group Validations
+
+  validates :name, presence: true
+  validates :address, presence: true
 end
