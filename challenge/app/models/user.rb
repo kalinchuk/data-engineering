@@ -20,4 +20,9 @@
 # This class represents a user that has access to the application.
 class User < ActiveRecord::Base
   devise :database_authenticatable
+
+  # @!attribute uploads
+  # The uploads by this user.
+  # @return [Relation<Upload>]
+  has_many :uploads, foreign_key: :creator_id
 end

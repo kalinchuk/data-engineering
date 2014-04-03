@@ -31,5 +31,13 @@ describe User do
         expect(subject).to be_valid
       end
     end
+
+    describe "associations" do
+      it "has many uploads" do
+        upload = create(:upload, creator: subject)
+        expect(subject.uploads).to include upload
+        expect(upload.creator).to eq subject
+      end
+    end
   end
 end

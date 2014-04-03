@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140403003927) do
+ActiveRecord::Schema.define(version: 20140403105418) do
 
   create_table "items", force: true do |t|
     t.string   "description"
@@ -41,7 +41,20 @@ ActiveRecord::Schema.define(version: 20140403003927) do
     t.integer  "purchase_count", default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "upload_id"
   end
+
+  create_table "uploads", force: true do |t|
+    t.integer  "creator_id"
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "uploads", ["creator_id"], name: "index_uploads_on_creator_id"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
