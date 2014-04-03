@@ -59,10 +59,7 @@ describe UploadsController do
 
     describe "new" do
       subject { response }
-
-      before do
-        get :new
-      end
+      before { get :new }
       
       it { should be_success }
       it { should render_template :new }
@@ -77,7 +74,7 @@ describe UploadsController do
         upload.stub save!: true, import!: true
       end
 
-      shared_examples_for "invalid_submission" do
+      shared_examples_for :invalid_submission do
         it { expect(flash[:alert]).not_to be_blank }
         it { should render_template :new }
       end
@@ -98,7 +95,7 @@ describe UploadsController do
           post :create, params
         end
 
-        it_behaves_like "invalid_submission"
+        it_behaves_like :invalid_submission
       end
 
       context "with errors creating purchases" do
@@ -107,7 +104,7 @@ describe UploadsController do
           post :create, params
         end
 
-        it_behaves_like "invalid_submission"
+        it_behaves_like :invalid_submission
       end
     end
   end

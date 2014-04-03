@@ -9,23 +9,11 @@ describe "uploads/new.html.haml" do
     render
   end
 
-  it "has a form to import files" do
-    expect(rendered).to have_selector 'form', action: uploads_path
-  end
+  subject { rendered }
 
-  it "has a file field" do
-    expect(rendered).to have_selector 'input', type: 'file', name: 'upload[file]'
-  end
-
-  it "has a submit button" do
-    expect(rendered).to have_selector 'input', type: 'submit'
-  end
-
-  it "has the upload's creator" do
-    expect(rendered).to include upload.creator.email
-  end
-
-  it "has the upload's file name" do
-    expect(rendered).to have_selector 'a', href: upload_path(upload), content: upload.file_file_name
-  end
+  it { should have_selector 'form', action: uploads_path }
+  it { should have_selector 'input', type: 'file', name: 'upload[file]' }
+  it { should have_selector 'input', type: 'submit' }
+  it { should include upload.creator.email }
+  it { should have_selector 'a', href: upload_path(upload), content: upload.file_file_name }
 end

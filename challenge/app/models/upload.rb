@@ -39,7 +39,7 @@ class Upload < ActiveRecord::Base
   # @!group Importing
 
   # This method imports the uploaded file and creates the purchases
-  # and the dependencies.
+  # and their dependencies.
   #
   # @return [Boolean]
   def import!

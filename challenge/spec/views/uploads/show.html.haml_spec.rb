@@ -11,43 +11,16 @@ describe "uploads/show.html.haml" do
     render
   end
 
-  it "has the upload file name" do
-    expect(rendered).to have_selector 'h1', content: upload.file_file_name
-  end
+  subject { rendered }
 
-  it "has a link to upload another file" do
-    expect(rendered).to have_selector 'a', href: new_upload_path, content: 'Import another file'
-  end
-
-  it "has the purchaser's name" do
-    expect(rendered).to include purchase_1.purchaser.name
-  end
-
-  it "has the merchant's name" do
-    expect(rendered).to include purchase_1.merchant.name
-  end
-
-  it "has the merchant's address" do
-    expect(rendered).to include purchase_1.merchant.address
-  end
-
-  it "has the item's description" do
-    expect(rendered).to include purchase_1.item.description
-  end
-
-  it "has the purchase count" do
-    expect(rendered).to include purchase_1.purchase_count.to_s
-  end
-
-  it "has the items's price" do
-    expect(rendered).to include number_to_currency(purchase_1.item.price)
-  end
-
-  it "has the subtotal" do
-    expect(rendered).to include number_to_currency(Purchase.all.subtotal)
-  end
-
-  it "has the gross total" do
-    expect(rendered).to include number_to_currency(Purchase.all.gross)
-  end
+  it { should have_selector 'h1', content: upload.file_file_name }
+  it { should have_selector 'a', href: new_upload_path, content: 'Import another file' }
+  it { should include purchase_1.purchaser.name }
+  it { should include purchase_1.merchant.name }
+  it { should include purchase_1.merchant.address }
+  it { should include purchase_1.item.description }
+  it { should include purchase_1.purchase_count.to_s }
+  it { should include number_to_currency(purchase_1.item.price) }
+  it { should include number_to_currency(Purchase.all.subtotal) }
+  it { should include number_to_currency(Purchase.all.gross) }
 end
