@@ -18,7 +18,7 @@
         
         %ul.nav.navbar-nav
           - if user_signed_in?
-            %li= link_to "Uploads", uploads_path
+            %li= link_to "New upload", new_upload_path
             %li= link_to "Log out", destroy_user_session_path, :method => :delete
           - else
             %li= link_to "Log in", new_user_session_path
