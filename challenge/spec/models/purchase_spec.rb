@@ -96,7 +96,7 @@ describe Purchase do
         end
 
         it "opens the CSV file" do
-          expect(CSV).to receive(:open).with(file, 'r')
+          expect(CSV).to receive(:open).with(file, 'r', col_sep: "\t")
           subject
         end
 
@@ -140,7 +140,7 @@ describe Purchase do
         end
 
         it "opens the CSV file" do
-          expect(CSV).to receive(:open).with(file, 'r')
+          expect(CSV).to receive(:open).with(file, 'r', col_sep: "\t")
           subject
         end
 
@@ -160,7 +160,7 @@ describe Purchase do
         end
 
         it "opens the CSV file" do
-          expect(CSV).to receive(:open).with(file, 'r')
+          expect(CSV).to receive(:open).with(file, 'r', col_sep: "\t")
           subject
         end
 

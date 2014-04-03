@@ -1,15 +1,22 @@
-require 'spec_helper'
-
-# Specs in this file have access to a helper object that includes
-# the PurchasesHelper. For example:
-#
-# describe PurchasesHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
 describe PurchasesHelper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let!(:purchase_1) { create(:purchase) }
+  let!(:purchase_2) { create(:purchase) }
+
+  describe "subtotal" do
+    subject { helper.subtotal(Purchase.all) }
+
+    it "is the total price for the items" do
+      expect(subject).to eq purchase_1.item.price + purchase_2.item.price
+    end
+  end
+
+  describe "gross" do
+    subject { helper.gross(Purchase.all) }
+
+    it "is the gross total for the items" do
+      expect(subject).to eq(
+        (purchase_1.item.price + purchase_2.item.price) * (purchase_1.purchase_count + purchase_2.purchase_count)
+      )
+    end
+  end
 end

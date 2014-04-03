@@ -1,0 +1,39 @@
+!!! 5
+%html(lang="en")
+  %head
+    %meta(charset="utf-8")
+    %meta(http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1")
+    %meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    %title= content_for?(:title) ? yield(:title) : 'Challenge'
+    = csrf_meta_tags
+    = stylesheet_link_tag "application", :media => "all"
+
+  %body
+    %nav.navbar.navbar-default
+      .container-fluid
+        .navbar-header
+          %a.navbar-brand
+            %strong Challenge
+      
+        
+        %ul.nav.navbar-nav
+          - if user_signed_in?
+            %li= link_to "Purchases", purchases_path
+            %li= link_to "Log out", destroy_user_session_path, :method => :delete
+          - else
+            %li= link_to "Log in", new_user_session_path
+
+    .container-fluid
+      .container-fluid
+        .col-xs-12
+          = bootstrap_flash
+          = yield
+    
+      %footer
+        %hr
+        %p &copy; 2014
+    /
+      Javascripts
+      \==================================================
+    / Placed at the end of the document so the pages load faster
+    = javascript_include_tag "application"

@@ -71,7 +71,7 @@ class Purchase < ActiveRecord::Base
         transaction do
           self.destroy_all
 
-          CSV.open(file, 'r') do |csv|
+          CSV.open(file, 'r', col_sep: "\t") do |csv|
             csv.each_with_index do |row,index|
               next if index == 0
               attrs = Hash[row.map.each_with_index{|attribute,index| [fields[index], attribute]}]

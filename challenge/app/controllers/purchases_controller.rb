@@ -1,5 +1,7 @@
 # This class provides actions to import purchases.
 class PurchasesController < ApplicationController
+  before_filter :authenticate_user!
+
   # @!group Exposures
 
   # @!attribute purchases
@@ -8,13 +10,6 @@ class PurchasesController < ApplicationController
   expose(:purchases)
 
   # @!group Actions
-
-  # This action provides an upload form to import a file.
-  #
-  # @render select_file
-  # @return [Action]
-  def select_file
-  end
 
   # This action imports the selected file.
   #
@@ -37,7 +32,7 @@ class PurchasesController < ApplicationController
         render :index
       end
     rescue
-      flash[:alert] = 'There was an error'
+      flash[:alert] = 'There was an error. Make sure you select a file'
       render :index
     end
   end

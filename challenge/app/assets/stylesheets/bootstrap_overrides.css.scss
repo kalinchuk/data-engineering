@@ -1,0 +1,14 @@
+@import "bootstrap";
+
+.error { @extend .has-error; }
+.alert-error { @extend .alert-danger; }
+
+.form-actions { margin-top: 10px; }
+ol.fragments-group { padding-left: 0px; }
+li.fragment { float: left; }
+
+form li { list-style-type: none; }
+
+.no-padding { padding-left: 0px; }
+.align-center { text-align: center; }
+.align-right { text-align: right; }

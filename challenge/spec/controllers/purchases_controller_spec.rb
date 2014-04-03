@@ -1,6 +1,10 @@
 describe PurchasesController do
   let(:params) { ActionController::Parameters.new }
 
+  before do
+    controller.stub :authenticate_user!
+  end
+
   describe "exposures" do
     describe "purchases" do
       let!(:purchase_1) { create(:purchase) }
@@ -19,20 +23,6 @@ describe PurchasesController do
   end
 
   describe "actions" do
-    describe "select_file" do
-      before do
-        get :select_file
-      end
-      
-      it "is a success" do
-        expect(response).to be_success
-      end
-      
-      it "renders the select_file page" do
-        expect(response).to render_template :select_file
-      end
-    end
-
     describe "import" do
       shared_examples_for "invalid_submission" do
         it "sets an alert notice" do

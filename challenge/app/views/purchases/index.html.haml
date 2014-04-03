@@ -1,2 +1,37 @@
-%h1 Purchases#index
-%p Find me in app/views/purchases/index.html.haml
+= render 'select_file'
+
+%hr
+
+- if purchases.any?
+  %h3 Purchases
+
+  %table.table
+    %thead
+      %tr
+        %th= Purchaser.human_attribute_name(:name)
+        %th= Merchant.human_attribute_name(:name)
+        %th= Merchant.human_attribute_name(:address)
+        %th= Item.human_attribute_name(:description)
+        %th.align-center= Purchase.human_attribute_name(:purchase_count)
+        %th.align-center= Item.human_attribute_name(:price)
+
+    %tbody
+      - purchases.each do |purchase|
+        %tr
+          %td= purchase.purchaser.name
+          %td= purchase.merchant.name
+          %td= purchase.merchant.address
+          %td= purchase.item.description
+          %td.align-center= purchase.purchase_count
+          %td.align-center= number_to_currency(purchase.item.price)
+
+    %tfoot
+      %tr
+        %td{colspan: 4}
+        %td.align-right Subtotal
+        %th.align-center= number_to_currency(subtotal(purchases))
+        
+      %tr
+        %td{colspan: 4}
+        %td.align-right Gross
+        %th.align-center= number_to_currency(gross(purchases))
