@@ -18,7 +18,7 @@ describe Upload do
 
     let(:creation_attributes) {{
       creator_id: creator.id,
-      file: fixture_file_upload('test.csv', 'text/plain')
+      file: fixture_file_upload('test.tab', 'application/octet-stream')
     }}
 
     subject { Upload.create(creation_attributes) }
@@ -64,25 +64,23 @@ describe Upload do
   end
 
   describe "importing" do
-    describe "import" do
+    describe "import!" do
       let(:upload) { create(:upload) }
-      let(:file_contents) { [
-        {
-          'purchaser name' => 'Snake Plissken',
-          'item description' => '$10 off $20 of food',
-          'item price' => 10.0,
-          'purchase count' => 2,
-          'merchant address' => '987 Fake St',
-          'merchant name' => "Bob's Pizza"
-        }
-      ]}
+      let(:file_contents) {{
+        'purchaser name' => 'Snake Plissken',
+        'item description' => '$10 off $20 of food',
+        'item price' => 10.0,
+        'purchase count' => 2,
+        'merchant address' => '987 Fake St',
+        'merchant name' => "Bob's Pizza"
+      }}
 
       let(:first_purchase) { Purchase.first }
       let(:first_purchaser) { Purchaser.first }
       let(:first_item) { Item.first }
       let(:first_merchant) { Merchant.first }
 
-      subject { upload.import }
+      subject { upload.import! }
 
       before do
         CSV.stub(:foreach).and_yield(file_contents)
@@ -131,29 +129,17 @@ describe Upload do
       end
 
       context "with invalid purchases" do
-        before do
-          file_contents << {
+        let(:file_contents) {{
             'purchaser name' => '',
             'item description' => '',
             'item price' => 12.0,
             'purchase count' => 5,
             'merchant address' => '987 Fake St',
             'merchant name' => "Bob's Pizza"
-          }
-        end
+        }}
 
-        it "opens the CSV file" do
-          expect(CSV).to receive(:foreach).with(upload.file.path, col_sep: "\t", return_headers: false, headers: true)
-          subject
-        end
-
-        it "does not create any purchases" do
-          subject
-          expect(Purchase.count).to eq 0
-        end
-
-        it "is false" do
-          expect(subject).to be_false
+        it "raises an exception" do
+          expect { subject }.to raise_error
         end
       end
 
@@ -162,18 +148,8 @@ describe Upload do
           CSV.stub(:foreach).and_raise
         end
 
-        it "opens the CSV file" do
-          expect(CSV).to receive(:foreach).with(upload.file.path, col_sep: "\t", return_headers: false, headers: true)
-          subject
-        end
-
-        it "does not create any purchases" do
-          subject
-          expect(Purchase.count).to eq 0
-        end
-
-        it "is false" do
-          expect(subject).to be_false
+        it "raises an exception" do
+          expect { subject }.to raise_error
         end
       end
     end

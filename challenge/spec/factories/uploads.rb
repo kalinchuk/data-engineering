@@ -18,6 +18,6 @@ include ActionDispatch::TestProcess
 FactoryGirl.define do
   factory :upload do
     creator factory: :user
-    file { fixture_file_upload(Rails.root.join('spec', 'fixtures', 'test.csv'), 'text/plain') }
+    file { fixture_file_upload(Rails.root.join('spec', 'fixtures', 'test.tab'), 'application/octet-stream') }
   end
 end

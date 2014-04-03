@@ -1,4 +1,4 @@
-= semantic_form_for :import, url: import_purchases_path do |f|
+= semantic_form_for upload, url: uploads_path do |f|
   .container-fluid.no-padding
     .col-xs-3.form-group
       = f.label :file do
@@ -7,3 +7,9 @@
 
     .col-xs-2.form-actions
       = f.submit 'Import', class: 'btn btn-primary'
+
+%hr
+
+%h3 Uploads
+
+= render 'uploads'

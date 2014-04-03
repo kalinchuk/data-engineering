@@ -1,10 +1,6 @@
 Challenge::Application.routes.draw do
   devise_for :users
-  root 'purchases#index'
+  root 'uploads#new'
 
-  resources :purchases, only: [:index] do
-    collection do
-      post :import
-    end
-  end
+  resources :uploads, only: [:new, :create, :show]
 end

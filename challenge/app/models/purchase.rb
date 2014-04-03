@@ -22,6 +22,9 @@ class Purchase < ActiveRecord::Base
 
   # @!group Associations
 
+  # @!attribute upload
+  # The upload that created the purchase.
+  # @return [Upload]
   belongs_to :upload
 
   # @!attribute purchaser
@@ -46,4 +49,20 @@ class Purchase < ActiveRecord::Base
   validates :item, presence: true
   validates :merchant, presence: true
   validates :purchase_count, presence: true, numericality: { greater_than: 0 }
+
+  # @!group Calculations
+
+  # This method gets the subtotal for the purchases.
+  #
+  # @return [Float]
+  def self.subtotal
+    includes(:item).sum('items.price')
+  end
+
+  # This method gets the gross total for the purchases.
+  #
+  # @return [Float]
+  def self.gross
+    includes(:item).sum('items.price') * sum(:purchase_count)
+  end
 end

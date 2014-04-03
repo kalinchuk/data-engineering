@@ -1,10 +1,11 @@
-= render 'select_file'
+%h1= upload.file_file_name
+= link_to 'Import another file', new_upload_path
 
 %hr
 
-- if purchases.any?
-  %h3 Purchases
+%h3 Purchases
 
+- if purchases.any?
   %table.table
     %thead
       %tr
@@ -29,9 +30,11 @@
       %tr
         %td{colspan: 4}
         %td.align-right Subtotal
-        %th.align-center= number_to_currency(subtotal(purchases))
+        %th.align-center= number_to_currency(purchases.subtotal)
         
       %tr
         %td{colspan: 4}
         %td.align-right Gross
-        %th.align-center= number_to_currency(gross(purchases))
+        %th.align-center= number_to_currency(purchases.gross)
+- else
+  No purchases

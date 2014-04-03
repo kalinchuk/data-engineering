@@ -33,7 +33,7 @@ class Upload < ActiveRecord::Base
   # @!group Validations
 
   validates :creator, presence: true
-  validates_attachment :file, presence: true, content_type: { content_type: ['text/plain', 'application/octet-stream'] }
+  validates_attachment :file, presence: true, content_type: { content_type: ['application/octet-stream', 'text/plain'] }
   validates_attachment_size :file, in: 0..10.megabytes
 
   # @!group Importing
@@ -42,20 +42,15 @@ class Upload < ActiveRecord::Base
   # and the dependencies.
   #
   # @return [Boolean]
-  def import
-    begin
-      transaction do
-        CSV.foreach(file.path, col_sep: "\t", return_headers: false, headers: true) do |csv|
-          csv.each do |row|
-            purchaser = Purchaser.find_or_create_by!(name: row['purchaser name'])
-            merchant = Merchant.find_or_create_by!(name: row['merchant name'], address: row['merchant address'])
-            item = Item.find_or_create_by!(merchant: merchant, description: row['item description'], price: row['item price'].to_f)
-            purchases.create!(purchaser: purchaser, merchant: merchant, item: item, purchase_count: row['purchase count'].to_i)
-          end
-        end
+  def import!
+    transaction do
+      CSV.foreach(file.path, col_sep: "\t", return_headers: false, headers: true) do |row|
+        purchaser = Purchaser.find_or_create_by!(name: row['purchaser name'])
+        merchant = Merchant.find_or_create_by!(name: row['merchant name'], address: row['merchant address'])
+        item = Item.find_or_create_by!(merchant: merchant, description: row['item description'], price: row['item price'].to_f)
+        purchases.create!(purchaser: purchaser, merchant: merchant, item: item, purchase_count: row['purchase count'].to_i)
       end
-    rescue => e
-      false
+      true
     end
   end
 end
