@@ -25,5 +25,5 @@ class Purchaser < ActiveRecord::Base
 
   # @!group Validations
 
-  validates :name, presence: true
+  validates_presence_of :name
 end

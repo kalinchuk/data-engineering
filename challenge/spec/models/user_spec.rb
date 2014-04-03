@@ -19,25 +19,8 @@
 
 describe User do
   describe "creation" do
-    let(:creation_attributes) {{
-      email: Faker::Internet.email,
-      password: Devise::friendly_token.first(6)
-    }}
+    subject { create(:user) }
 
-    subject { User.create(creation_attributes) }
-
-    describe "validations" do
-      it "accepts a user with all attributes" do
-        expect(subject).to be_valid
-      end
-    end
-
-    describe "associations" do
-      it "has many uploads" do
-        upload = create(:upload, creator: subject)
-        expect(subject.uploads).to include upload
-        expect(upload.creator).to eq subject
-      end
-    end
+    it { should have_many :uploads }
   end
 end

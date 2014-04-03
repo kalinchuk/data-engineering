@@ -44,11 +44,8 @@ class Purchase < ActiveRecord::Base
 
   # @!group Validations
   
-  validates :upload, presence: true
-  validates :purchaser, presence: true
-  validates :item, presence: true
-  validates :merchant, presence: true
-  validates :purchase_count, presence: true, numericality: { greater_than: 0 }
+  validates_presence_of :upload_id, :purchaser_id, :item_id, :merchant_id, :purchase_count
+  validates_numericality_of :purchase_count, greater_than: 0
 
   # @!group Calculations
 

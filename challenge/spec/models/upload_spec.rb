@@ -14,53 +14,14 @@
 
 describe Upload do
   describe "creation" do
-    let(:creator) { create(:user) }
+    subject { create(:upload) }
 
-    let(:creation_attributes) {{
-      creator_id: creator.id,
-      file: fixture_file_upload('test.tab', 'application/octet-stream')
-    }}
-
-    subject { Upload.create(creation_attributes) }
-
-    describe "validations" do
-      it "accepts an upload with all attributes" do
-        expect(subject).to be_valid
-      end
-
-      it "rejects an upload without a creator" do
-        creation_attributes.delete :creator_id
-        expect(subject).not_to be_valid
-      end
-
-      it "validates the upload file" do
-        expect(subject).to have_attached_file(:file)
-      end
-
-      it "validates the upload file type" do
-        expect(subject).to validate_attachment_content_type(:file).allowing('text/plain', 'application/octet-stream').rejecting('image/png')
-      end
-
-      it "validates the upload file size" do
-        expect(subject).to validate_attachment_size(:file).less_than(10.megabytes)
-      end
-
-      it "accepts an upload from a factory" do
-        expect(create(:upload)).to be_valid
-      end
-    end
-
-    describe "associations" do
-      it "is associated with the creator" do
-        expect(subject.creator).to eq creator
-      end
-
-      it "has many purchases" do
-        purchase = create(:purchase, upload: subject)
-        expect(subject.purchases).to include purchase
-        expect(purchase.upload).to eq subject
-      end
-    end
+    it { should belong_to :creator }
+    it { should have_many :purchases }
+    it { should validate_presence_of :creator_id }
+    it { should have_attached_file(:file) }
+    it { should validate_attachment_content_type(:file).allowing('text/plain', 'application/octet-stream').rejecting('image/png') }
+    it { should validate_attachment_size(:file).less_than(10.megabytes) }
   end
 
   describe "importing" do
@@ -87,6 +48,8 @@ describe Upload do
       end
 
       context "with valid purchases" do
+        it { should be_true }
+
         it "opens the CSV file" do
           expect(CSV).to receive(:foreach).with(upload.file.path, col_sep: "\t", return_headers: false, headers: true)
           subject
@@ -122,10 +85,6 @@ describe Upload do
           expect(first_merchant.name).to eq "Bob's Pizza"
           expect(first_merchant.address).to eq '987 Fake St'
         end
-
-        it "is true" do
-          expect(subject).to be_true
-        end
       end
 
       context "with invalid purchases" do
@@ -138,19 +97,13 @@ describe Upload do
             'merchant name' => "Bob's Pizza"
         }}
 
-        it "raises an exception" do
-          expect { subject }.to raise_error
-        end
+        it { expect { should }.to raise_error }
       end
 
       context "with an exception" do
-        before do
-          CSV.stub(:foreach).and_raise
-        end
+        before { CSV.stub(:foreach).and_raise }
 
-        it "raises an exception" do
-          expect { subject }.to raise_error
-        end
+        it { expect { should }.to raise_error }
       end
     end
   end

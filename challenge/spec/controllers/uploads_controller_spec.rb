@@ -14,20 +14,10 @@ describe UploadsController do
       let!(:upload_3) { create(:upload) }
       subject { controller.uploads }
 
-      it "is a relation" do
-        expect(subject).to be_an ActiveRecord::Relation
-      end
-
-      it "includes all uploads" do
-        expect(subject).to include upload_1
-        expect(subject).to include upload_2
-        expect(subject).to include upload_3
-      end
-
-      it "sorts the uploads by creation time desc" do
-        expect(subject.index(upload_3)).to be < subject.index(upload_2)
-        expect(subject.index(upload_2)).to be < subject.index(upload_1)
-      end
+      it { should be_an ActiveRecord::Relation }
+      it { should include upload_1 }
+      it { should include upload_2 }
+      it { should include upload_3 }
     end
 
     describe "upload" do
@@ -36,9 +26,7 @@ describe UploadsController do
 
       before { controller.params[:id] = upload.id }
 
-      it "is the upload" do
-        expect(subject).to eq upload
-      end
+      it { should eq upload }
     end
 
     describe "purchases" do
@@ -49,54 +37,40 @@ describe UploadsController do
 
       before { controller.stub upload: upload }
 
-      it "is a relation" do
-        expect(subject).to be_an ActiveRecord::Relation
-      end
-
-      it "includes upload's purchases" do
-        expect(subject).to include purchase_1
-      end
-
-      it "does not include other purchases" do
-        expect(subject).not_to include purchase_2
-      end
+      it { should be_an ActiveRecord::Relation }
+      it { should include purchase_1 }
+      it { should_not include purchase_2 }
     end
   end
 
   describe "actions" do
     describe "show" do
       let(:upload) { create(:upload) }
+      subject { response }
 
       before do
         params[:id] = upload.id
         get :show, params
       end
-      
-      it "is a success" do
-        expect(response).to be_success
-      end
-      
-      it "renders the show page" do
-        expect(response).to render_template :show
-      end
+
+      it { should be_success }
+      it { should render_template :show }
     end
 
     describe "new" do
+      subject { response }
+
       before do
         get :new
       end
       
-      it "is a success" do
-        expect(response).to be_success
-      end
-      
-      it "renders the new page" do
-        expect(response).to render_template :new
-      end
+      it { should be_success }
+      it { should render_template :new }
     end
 
     describe "create" do
       let(:upload) { create(:upload) }
+      subject { response }
 
       before do
         controller.stub upload: upload
@@ -104,13 +78,8 @@ describe UploadsController do
       end
 
       shared_examples_for "invalid_submission" do
-        it "sets an alert notice" do
-          expect(flash[:alert]).not_to be_blank
-        end
-
-        it "renders the new page" do
-          expect(response).to render_template :new
-        end
+        it { expect(flash[:alert]).not_to be_blank }
+        it { should render_template :new }
       end
 
       context "with a successful submission" do
@@ -119,13 +88,8 @@ describe UploadsController do
           post :create, params
         end
 
-        it "sets a notice message" do
-          expect(flash[:notice]).not_to be_blank
-        end
-
-        it "redirects to the created upload" do
-          expect(response).to redirect_to upload_path(controller.upload)
-        end
+        it { expect(flash[:notice]).not_to be_blank }
+        it { should redirect_to upload_path(controller.upload) }
       end
 
       context "with an invalid file" do

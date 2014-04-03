@@ -14,6 +14,7 @@
 
 FactoryGirl.define do
   factory :item do
+    merchant
     description { Faker::Lorem.paragraph }
     price { rand(100.0) + 1 }
   end

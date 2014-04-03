@@ -32,7 +32,7 @@ class Upload < ActiveRecord::Base
 
   # @!group Validations
 
-  validates :creator, presence: true
+  validates_presence_of :creator_id
   validates_attachment :file, presence: true, content_type: { content_type: ['application/octet-stream', 'text/plain'] }
   validates_attachment_size :file, in: 0..10.megabytes
 

@@ -31,6 +31,6 @@ class Item < ActiveRecord::Base
 
   # @!group Validations
 
-  validates :description, presence: true
-  validates :price, presence: true, numericality: { greater_than: 0 }
+  validates_presence_of :merchant_id, :description, :price
+  validates_numericality_of :price, greater_than: 0
 end
